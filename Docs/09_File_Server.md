@@ -2,41 +2,15 @@
 
 
 
-\## Purpose
+\# Enterprise File Server \& Role-Based Access Control
 
 
 
-File servers provide centralized storage for organizational data while allowing administrators to control access through NTFS permissions and Active Directory Security Groups. Centralized file storage improves collaboration, simplifies backups, and enhances data security.
+\## 🎯 Objective
 
 
 
-This phase of the project will focus on deploying a Windows Server file share infrastructure that integrates with Active Directory.
-
-
-
-\---
-
-
-
-\# Objectives
-
-
-
-The following objectives are planned for this phase:
-
-
-
-\- Create departmental shared folders
-
-\- Configure NTFS permissions
-
-\- Configure Share permissions
-
-\- Implement Security Group-based access control
-
-\- Test user access
-
-\- Validate least privilege access
+Implement an enterprise-style Windows File Server using Active Directory security groups, NTFS permissions, and shared folders to enforce Role-Based Access Control (RBAC) and the Principle of Least Privilege.
 
 
 
@@ -44,27 +18,41 @@ The following objectives are planned for this phase:
 
 
 
-\# Planned Folder Structure
+\# Lab Overview
 
 
 
-```
+In this phase of the Active Directory lab, departmental shared folders were created and secured using both Share Permissions and NTFS Permissions.
 
-D:\\Shares
 
-│
 
-├── Executive
+Rather than assigning permissions directly to individual users, Active Directory security groups were used to centrally manage access to departmental resources.
 
-├── Finance
 
-├── HR
 
-├── IT
+This approach reflects common enterprise best practices for Windows Server administration.
 
-├── Marketing
 
-└── Sales
+
+\---
+
+
+
+\# Folder Structure
+
+
+
+```text
+
+C:\\
+
+└── Shares
+
+&#x20;   ├── HR
+
+&#x20;   ├── IT
+
+&#x20;   └── Finance
 
 ```
 
@@ -74,33 +62,19 @@ D:\\Shares
 
 
 
-\# Planned Permissions
+\# Shared Folders
 
 
 
-Permissions will be assigned using Active Directory Security Groups rather than individual user accounts.
+| Share | Purpose |
 
+|--------|---------|
 
+| HR | Human Resources department files |
 
-| Shared Folder | Security Group |
+| IT | Information Technology department files |
 
-|--------------|----------------|
-
-| Executive | GG\_Executive\_Staff |
-
-| Finance | GG\_Finance\_Staff |
-
-| HR | GG\_HR\_Staff |
-
-| IT | GG\_IT\_Staff |
-
-| Marketing | GG\_Marketing\_Staff |
-
-| Sales | GG\_Sales\_Staff |
-
-
-
-This approach follows Microsoft's recommended practice of assigning permissions to groups instead of directly to users.
+| Finance | Finance department files |
 
 
 
@@ -108,15 +82,31 @@ This approach follows Microsoft's recommended practice of assigning permissions 
 
 
 
-\# Security Considerations
+\# Share Permissions
 
 
 
-The file server implementation will follow the Principle of Least Privilege by granting users access only to the resources required for their job responsibilities.
+Each shared folder was configured with the following Share Permission:
 
 
 
-Administrative access will remain restricted to authorized administrator accounts.
+| Principal | Permission |
+
+|-----------|------------|
+
+| Everyone | Read |
+
+
+
+\## Why?
+
+
+
+Share permissions were intentionally kept simple.
+
+
+
+Access control is enforced through NTFS permissions, which provide more granular security and follow Microsoft's recommended best practice.
 
 
 
@@ -124,25 +114,177 @@ Administrative access will remain restricted to authorized administrator account
 
 
 
-\# Validation
+\# NTFS Permissions
 
 
 
-After implementation, the following items will be verified:
+\## HR Folder
 
 
 
-\- Shared folders created successfully
+| Principal | Permission |
 
-\- NTFS permissions configured correctly
+|-----------|------------|
 
-\- Share permissions configured correctly
+| SYSTEM | Full Control |
 
-\- Users can access authorized folders
+| Administrators | Full Control |
 
-\- Unauthorized access is denied
+| CREATOR OWNER | Full Control (Subfolders and files only) |
 
-\- Security Group permissions function as expected
+| GG\_HR\_Staff | Modify |
+
+
+
+\---
+
+
+
+\## IT Folder
+
+
+
+| Principal | Permission |
+
+|-----------|------------|
+
+| SYSTEM | Full Control |
+
+| Administrators | Full Control |
+
+| CREATOR OWNER | Full Control (Subfolders and files only) |
+
+| GG\_IT\_Staff | Modify |
+
+
+
+\---
+
+
+
+\## Finance Folder
+
+
+
+| Principal | Permission |
+
+|-----------|------------|
+
+| SYSTEM | Full Control |
+
+| Administrators | Full Control |
+
+| CREATOR OWNER | Full Control (Subfolders and files only) |
+
+| GG\_Finance\_Staff | Modify |
+
+
+
+\---
+
+
+
+\# Security Concepts Demonstrated
+
+
+
+This lab demonstrates several core Windows Server security concepts:
+
+
+
+\- Role-Based Access Control (RBAC)
+
+\- Principle of Least Privilege
+
+\- NTFS Permissions
+
+\- Share Permissions
+
+\- Permission Inheritance
+
+\- Explicit Permissions
+
+\- Active Directory Security Groups
+
+\- Departmental Access Control
+
+
+
+\---
+
+
+
+\# Enterprise Design Decisions
+
+
+
+\## Role-Based Access Control (RBAC)
+
+
+
+Access was assigned to Active Directory security groups instead of individual users.
+
+
+
+Benefits include:
+
+
+
+\- Easier administration
+
+\- Simplified onboarding and offboarding
+
+\- Centralized permission management
+
+\- Reduced administrative overhead
+
+
+
+\---
+
+
+
+\## Principle of Least Privilege
+
+
+
+Each department only has access to the resources required to perform its job functions.
+
+
+
+Examples:
+
+
+
+\- HR users cannot access Finance files.
+
+\- Finance users cannot access IT files.
+
+\- IT users cannot access HR files.
+
+
+
+This minimizes unauthorized access and reduces organizational risk.
+
+
+
+\---
+
+
+
+\## Permission Inheritance
+
+
+
+Permission inheritance was disabled for each departmental folder.
+
+
+
+Inherited permissions were converted into explicit permissions before configuration.
+
+
+
+This allows each department to maintain its own security configuration without inheriting unnecessary permissions from the parent folder.
 
 
 
@@ -154,21 +296,23 @@ After implementation, the following items will be verified:
 
 
 
-Upon completion of this phase, this project will demonstrate:
+\- Windows Server Administration
 
+\- Active Directory Administration
 
+\- File Server Configuration
 
-\- Windows File Services
+\- NTFS Permission Management
 
-\- NTFS Permissions
+\- Share Permission Configuration
 
-\- Share Permissions
+\- Security Group Administration
 
-\- Active Directory Security Groups
+\- Role-Based Access Control (RBAC)
 
-\- Access Control
+\- Principle of Least Privilege
 
-\- Enterprise File Server Administration
+\- Enterprise Access Management
 
 
 
@@ -176,21 +320,17 @@ Upon completion of this phase, this project will demonstrate:
 
 
 
-\# Screenshots
+\# Outcome
 
 
 
-To be added after implementation:
+Successfully implemented a secure enterprise file server using Active Directory security groups and NTFS permissions.
 
 
 
-\- File Server Manager
+Departmental shared folders were configured to ensure users receive access only to the resources required for their job role while protecting sensitive organizational data.
 
-\- Shared folder configuration
 
-\- NTFS Security tab
 
-\- Share permissions
-
-\- User access verification
+This implementation follows Microsoft Windows Server administration best practices and demonstrates practical experience with enterprise file server deployment and access control.
 
