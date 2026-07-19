@@ -2,39 +2,15 @@
 
 
 
-\## Purpose
+\## Overview
 
 
 
-Before deploying Active Directory, a stable and properly configured Windows Server environment was prepared. This phase focused on creating the virtual infrastructure, configuring networking, and preparing the server for enterprise services.
+Before deploying Active Directory Domain Services (AD DS), a virtual enterprise environment was created using Oracle VirtualBox. The environment consists of two virtual machines connected through separate virtual networks to simulate a production Windows domain while maintaining Internet connectivity.
 
 
 
-A properly configured environment is critical because Active Directory relies on consistent networking, static IP addressing, and reliable server configuration.
-
-
-
-\---
-
-
-
-\## Environment Specifications
-
-
-
-| Component | Configuration |
-
-|----------|---------------|
-
-| Hypervisor | Oracle VirtualBox |
-
-| Virtual Machine | DC01 |
-
-| Operating System | Windows Server 2022 Standard Evaluation |
-
-| Computer Name | DC01 |
-
-| Domain | corp.local (configured later) |
+This section documents the deployment of the virtualization environment, installation of Windows Server 2022 and Windows 11, and the initial network configuration required to support Active Directory.
 
 
 
@@ -42,15 +18,29 @@ A properly configured environment is critical because Active Directory relies on
 
 
 
-\## Virtual Machine Configuration
+\# Lab Environment
 
 
 
-The Domain Controller was deployed as a virtual machine using Oracle VirtualBox. The virtual machine provides an isolated environment that closely simulates enterprise infrastructure while remaining portable and easy to manage.
+\## Host System
 
 
 
-The VM was configured with sufficient resources to support Active Directory Domain Services (AD DS), DNS, and future lab expansion.
+The lab was built on a Windows host computer using Oracle VirtualBox as the virtualization platform.
+
+
+
+\## Virtualization Platform
+
+
+
+\- Oracle VirtualBox 7.x
+
+\- Windows Host Operating System
+
+
+
+VirtualBox provides isolated virtual networking, allowing the domain controller and client workstation to communicate securely without affecting the physical home network.
 
 
 
@@ -58,15 +48,77 @@ The VM was configured with sufficient resources to support Active Directory Doma
 
 
 
-\## Network Configuration
+\# Virtual Machines
 
 
 
-Two virtual network adapters were configured.
+\## Domain Controller (DC01)
 
 
 
-\### Adapter 1 – NAT
+| Setting | Value |
+
+|----------|-------|
+
+| Operating System | Windows Server 2022 |
+
+| Hostname | DC01 |
+
+| Domain | corp.local |
+
+| Memory | 4 GB RAM |
+
+| Processor | 2 vCPUs |
+
+| Storage | Virtual Hard Disk |
+
+| Adapter 1 | NAT |
+
+| Adapter 2 | Internal Network (LABNET) |
+
+
+
+\---
+
+
+
+\## Client Workstation (CLIENT01)
+
+
+
+| Setting | Value |
+
+|----------|-------|
+
+| Operating System | Windows 11 Pro |
+
+| Hostname | CLIENT01 |
+
+| Memory | 4 GB RAM |
+
+| Processor | 2 vCPUs |
+
+| Storage | Virtual Hard Disk |
+
+| Adapter 1 | NAT |
+
+| Adapter 2 | Internal Network (LABNET) |
+
+
+
+\---
+
+
+
+\# Network Design
+
+
+
+Two separate virtual network adapters were configured for each virtual machine.
+
+
+
+\## NAT Adapter
 
 
 
@@ -76,13 +128,35 @@ Purpose:
 
 \- Internet connectivity
 
+\- Windows activation
+
 \- Windows Updates
 
 \- Software downloads
 
 
 
-\### Adapter 2 – Internal Network (LABNET)
+VirtualBox automatically assigns addresses within the:
+
+
+
+```
+
+10.0.2.0/24
+
+```
+
+
+
+network.
+
+
+
+\---
+
+
+
+\## Internal Network (LABNET)
 
 
 
@@ -90,13 +164,31 @@ Purpose:
 
 
 
-\- Private communication between lab devices
+\- Active Directory communication
 
-\- Active Directory traffic
+\- DNS
 
-\- Domain communication
+\- Authentication
 
-\- Future Windows 11 client connectivity
+\- File sharing
+
+\- Group Policy
+
+
+
+Internal subnet:
+
+
+
+```
+
+192.168.10.0/24
+
+```
+
+
+
+The Internal Network isolates domain traffic from the physical home network while allowing secure communication between virtual machines.
 
 
 
@@ -104,27 +196,129 @@ Purpose:
 
 
 
-\## Static IP Configuration
+\# Windows Server Installation
 
 
 
-Because Domain Controllers should maintain a consistent network identity, the Internal Network adapter was assigned a static IPv4 address.
+Windows Server 2022 was installed on the first virtual machine and configured as the Domain Controller.
+
+
+
+Initial configuration included:
+
+
+
+\- Computer renamed to \*\*DC01\*\*
+
+\- Static IPv4 address configured
+
+\- Server updates installed
+
+\- Initial administrative configuration completed
+
+
+
+This server later hosted:
+
+
+
+\- Active Directory Domain Services
+
+\- DNS
+
+\- File Services
+
+
+
+\---
+
+
+
+\# Windows 11 Installation
+
+
+
+Windows 11 Pro was installed on the client workstation virtual machine.
+
+
+
+Because VirtualBox does not fully emulate TPM and Secure Boot by default, Windows Setup required bypassing hardware requirement checks using registry modifications during installation.
+
+
+
+Following installation:
+
+
+
+\- Computer renamed to \*\*CLIENT01\*\*
+
+\- Local administrator account created
+
+\- Initial Windows configuration completed
+
+\- Network adapters configured
+
+\- Domain join completed after Active Directory deployment
+
+
+
+\---
+
+
+
+\# Network Configuration
+
+
+
+\## Domain Controller
+
+
+
+Static IP configuration:
 
 
 
 | Setting | Value |
 
-|---------|-------|
+|----------|-------|
 
-| IP Address | 192.168.10.10 |
+| IPv4 Address | 192.168.10.10 |
 
 | Subnet Mask | 255.255.255.0 |
+
+| Default Gateway | Not Required |
+
+| Preferred DNS | Self (192.168.10.10) |
+
+
+
+\---
+
+
+
+\## Client Workstation
+
+
+
+Static LABNET configuration:
+
+
+
+| Setting | Value |
+
+|----------|-------|
+
+| IPv4 Address | 192.168.10.20 |
+
+| Subnet Mask | 255.255.255.0 |
+
+| Default Gateway | Not Required |
 
 | Preferred DNS | 192.168.10.10 |
 
 
 
-The NAT adapter remained configured for DHCP to maintain Internet access while keeping domain traffic isolated on the LABNET network.
+The NAT adapter remained configured automatically by VirtualBox to provide Internet access.
 
 
 
@@ -132,37 +326,27 @@ The NAT adapter remained configured for DHCP to maintain Internet access while k
 
 
 
-\## Validation
+\# Deployment Validation
 
 
 
-The following items were verified before Active Directory installation:
+Before installing Active Directory, the following validation steps were completed:
 
 
 
-\- Windows Server installed successfully
+\- Virtual machines successfully booted
 
-\- Server renamed to DC01
+\- Internal networking verified
 
-\- Static IP address configured
+\- Static IP configuration confirmed
 
-\- Internet connectivity verified
+\- DNS configuration validated
 
-\- Internal network operational
-
-\- Server Manager functioning normally
+\- Internet connectivity confirmed through the NAT adapter
 
 
 
-\---
-
-
-
-\## Key Takeaways
-
-
-
-Establishing a stable server and network configuration before installing Active Directory helps ensure reliable domain services and reduces future configuration issues.
+These steps ensured the environment was correctly configured before deploying enterprise services.
 
 
 
@@ -170,19 +354,27 @@ Establishing a stable server and network configuration before installing Active 
 
 
 
-\## Skills Demonstrated
+\# Challenges Encountered
 
 
 
-\- Oracle VirtualBox Administration
+Several deployment issues were encountered during the setup process.
 
-\- Windows Server Deployment
 
-\- Network Configuration
 
-\- Static IP Addressing
+\### Windows 11 Installation
 
-\- Windows Server Administration
+
+
+Windows 11 hardware requirement checks prevented installation inside VirtualBox.
+
+
+
+Resolution:
+
+
+
+\- Applied Microsoft-supported registry bypass during Windows Setup for TPM, Secure Boot, and memory requirement checks.
 
 
 
@@ -190,21 +382,81 @@ Establishing a stable server and network configuration before installing Active 
 
 
 
-\## Screenshots
+\### VirtualBox Boot Configuration
 
 
 
-Add screenshots for:
+The Windows 11 virtual machine initially displayed a black screen after installation.
 
 
 
-\- VirtualBox VM settings
+Resolution:
 
-\- Network adapter configuration
 
-\- Windows network adapter settings
 
-\- Static IPv4 configuration
+\- Corrected the virtual machine boot configuration.
 
-\- Server Manager (Local Server)
+\- Verified the virtual hard disk was selected as the primary boot device.
+
+\- Reset the virtual machine to complete Windows Out-of-Box Experience (OOBE).
+
+
+
+\---
+
+
+
+\### Network Configuration
+
+
+
+The client workstation initially received an APIPA (169.254.x.x) address on the internal adapter.
+
+
+
+Resolution:
+
+
+
+\- Configured a static IP address.
+
+\- Assigned the Domain Controller as the preferred DNS server.
+
+\- Verified connectivity using:
+
+
+
+```
+
+ping
+
+```
+
+
+
+and
+
+
+
+```
+
+nslookup
+
+```
+
+
+
+before joining the domain.
+
+
+
+\---
+
+
+
+\# Summary
+
+
+
+The environment setup established a stable enterprise lab consisting of a Windows Server Domain Controller and a Windows 11 client connected through isolated virtual networking. This foundation provided the infrastructure required to deploy Active Directory, DNS, Group Policy, centralized authentication, and secure file services in later phases of the project.
 

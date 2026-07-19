@@ -1,336 +1,211 @@
-\# File Server
+# File Server
 
+## Overview
 
+Centralized file sharing is a core service provided by Windows Server in enterprise environments. By combining SMB file sharing with NTFS permissions and Active Directory Security Groups, administrators can control access to departmental resources while maintaining a scalable and secure access model.
 
-\# Enterprise File Server \& Role-Based Access Control
+In this lab, departmental file shares were created for the IT, Human Resources (HR), and Finance departments. Access was managed using Role-Based Access Control (RBAC), where permissions were assigned to Security Groups rather than individual users.
 
+During implementation, a permissions issue was identified and resolved through systematic troubleshooting, providing practical experience with Windows file access management.
 
+---
 
-\## 🎯 Objective
+# Objectives
 
+The goals of this phase were to:
 
+- Create departmental shared folders
+- Configure SMB file sharing
+- Apply NTFS permissions
+- Implement Role-Based Access Control (RBAC)
+- Validate user access
+- Troubleshoot and resolve file permission issues
 
-Implement an enterprise-style Windows File Server using Active Directory security groups, NTFS permissions, and shared folders to enforce Role-Based Access Control (RBAC) and the Principle of Least Privilege.
+---
 
+# Folder Structure
 
-
-\---
-
-
-
-\# Lab Overview
-
-
-
-In this phase of the Active Directory lab, departmental shared folders were created and secured using both Share Permissions and NTFS Permissions.
-
-
-
-Rather than assigning permissions directly to individual users, Active Directory security groups were used to centrally manage access to departmental resources.
-
-
-
-This approach reflects common enterprise best practices for Windows Server administration.
-
-
-
-\---
-
-
-
-\# Folder Structure
-
-
-
-```text
-
-C:\\
-
-└── Shares
-
-&#x20;   ├── HR
-
-&#x20;   ├── IT
-
-&#x20;   └── Finance
+The following departmental folders were created:
 
 ```
+C:\Shares
+│
+├── IT
+├── HR
+└── Finance
+```
 
+Each folder represents a departmental network share that is accessible only to authorized users.
 
+---
 
-\---
+# SMB Shares
 
-
-
-\# Shared Folders
-
-
+The folders were shared using Windows File and Storage Services.
 
 | Share | Purpose |
-
 |--------|---------|
+| IT | Information Technology resources |
+| HR | Human Resources documents |
+| Finance | Financial records |
 
-| HR | Human Resources department files |
+These shares allow authenticated domain users to access department-specific resources over the network.
 
-| IT | Information Technology department files |
+---
 
-| Finance | Finance department files |
+# Share Permissions
 
-
-
-\---
-
-
-
-\# Share Permissions
-
-
-
-Each shared folder was configured with the following Share Permission:
-
-
+The final Share permissions were configured as follows:
 
 | Principal | Permission |
-
 |-----------|------------|
+| Everyone | Change |
+| GG_IT_Staff | Change |
+| GG_HR_Staff | Change |
+| GG_Finance_Staff | Change |
 
-| Everyone | Read |
+Share permissions provide network-level access, while NTFS permissions determine what users can do once access is granted.
 
+---
 
+# NTFS Permissions
 
-\## Why?
+Access to each departmental folder was restricted using NTFS permissions.
 
+Example configuration:
 
+| Folder | Authorized Group | Permission |
+|----------|-----------------|------------|
+| IT | GG_IT_Staff | Modify |
+| HR | GG_HR_Staff | Modify |
+| Finance | GG_Finance_Staff | Modify |
 
-Share permissions were intentionally kept simple.
+This ensures users only have access to resources associated with their department.
 
+---
 
+# Role-Based Access Control (RBAC)
 
-Access control is enforced through NTFS permissions, which provide more granular security and follow Microsoft's recommended best practice.
+Permissions were assigned to Security Groups instead of individual user accounts.
 
+The access model follows this structure:
 
+```
+User
+   │
+   ▼
+Security Group
+   │
+   ▼
+Department Folder
+```
 
-\---
+Example:
 
+```
+Ethan Carter
+      │
+      ▼
+GG_IT_Staff
+      │
+      ▼
+\\DC01\IT
+```
 
+This design simplifies administration and follows Microsoft's recommended Active Directory practices.
 
-\# NTFS Permissions
+---
 
+# Troubleshooting
 
+## Issue
 
-\## HR Folder
+During validation, the IT user successfully authenticated to the domain but received an **Access Denied** message when attempting to create a file in the IT department share.
 
+Authentication and group membership were functioning correctly, indicating that the issue was related to file sharing permissions rather than Active Directory.
 
+---
 
-| Principal | Permission |
+## Investigation
 
-|-----------|------------|
+Several diagnostic tools were used to isolate the issue.
 
-| SYSTEM | Full Control |
+### Verify Group Membership
 
-| Administrators | Full Control |
+```
+whoami /groups
+```
 
-| CREATOR OWNER | Full Control (Subfolders and files only) |
+Confirmed that the authenticated user was a member of **GG_IT_Staff**.
 
-| GG\_HR\_Staff | Modify |
+---
 
+### Verify NTFS Permissions
 
+```
+icacls C:\Shares\IT
+```
 
-\---
+Confirmed that the **GG_IT_Staff** Security Group had **Modify** permissions on the folder.
 
+---
 
+### Verify Share Permissions
 
-\## IT Folder
+```
+net share
+```
 
+Reviewing the share configuration revealed that the Share permissions were more restrictive than the NTFS permissions, preventing authorized users from modifying files across the network.
 
+---
 
-| Principal | Permission |
+# Resolution
 
-|-----------|------------|
+The Share permissions were updated to allow the appropriate level of network access while NTFS permissions continued to enforce department-level authorization.
 
-| SYSTEM | Full Control |
+Final configuration:
 
-| Administrators | Full Control |
+- **Share Permissions:** Change
+- **NTFS Permissions:** Modify
 
-| CREATOR OWNER | Full Control (Subfolders and files only) |
+This configuration follows Microsoft's recommended practice of allowing Share permissions to provide broad network access while relying on NTFS permissions for detailed authorization.
 
-| GG\_IT\_Staff | Modify |
+---
 
+# Validation
 
+After correcting the Share permissions, the following tests were successfully completed.
 
-\---
+## Ethan Carter (IT)
 
+| Test | Result |
+|------|--------|
+| Domain Login | ✅ Success |
+| Access IT Share | ✅ Success |
+| Create test.txt | ✅ Success |
+| Access HR Share | ❌ Access Denied |
+| Access Finance Share | ❌ Access Denied |
 
+These results confirmed that Role-Based Access Control was functioning correctly.
 
-\## Finance Folder
+---
 
+# Enterprise Best Practices Applied
 
+The file server implementation follows several enterprise best practices:
 
-| Principal | Permission |
+- Centralized file storage
+- Security Group–based permissions
+- Least Privilege access
+- Separation of Share and NTFS permissions
+- Role-Based Access Control (RBAC)
+- Systematic troubleshooting and validation
 
-|-----------|------------|
+These practices improve security, simplify administration, and make the environment easier to maintain as the organization grows.
 
-| SYSTEM | Full Control |
+---
 
-| Administrators | Full Control |
+# Summary
 
-| CREATOR OWNER | Full Control (Subfolders and files only) |
-
-| GG\_Finance\_Staff | Modify |
-
-
-
-\---
-
-
-
-\# Security Concepts Demonstrated
-
-
-
-This lab demonstrates several core Windows Server security concepts:
-
-
-
-\- Role-Based Access Control (RBAC)
-
-\- Principle of Least Privilege
-
-\- NTFS Permissions
-
-\- Share Permissions
-
-\- Permission Inheritance
-
-\- Explicit Permissions
-
-\- Active Directory Security Groups
-
-\- Departmental Access Control
-
-
-
-\---
-
-
-
-\# Enterprise Design Decisions
-
-
-
-\## Role-Based Access Control (RBAC)
-
-
-
-Access was assigned to Active Directory security groups instead of individual users.
-
-
-
-Benefits include:
-
-
-
-\- Easier administration
-
-\- Simplified onboarding and offboarding
-
-\- Centralized permission management
-
-\- Reduced administrative overhead
-
-
-
-\---
-
-
-
-\## Principle of Least Privilege
-
-
-
-Each department only has access to the resources required to perform its job functions.
-
-
-
-Examples:
-
-
-
-\- HR users cannot access Finance files.
-
-\- Finance users cannot access IT files.
-
-\- IT users cannot access HR files.
-
-
-
-This minimizes unauthorized access and reduces organizational risk.
-
-
-
-\---
-
-
-
-\## Permission Inheritance
-
-
-
-Permission inheritance was disabled for each departmental folder.
-
-
-
-Inherited permissions were converted into explicit permissions before configuration.
-
-
-
-This allows each department to maintain its own security configuration without inheriting unnecessary permissions from the parent folder.
-
-
-
-\---
-
-
-
-\# Skills Demonstrated
-
-
-
-\- Windows Server Administration
-
-\- Active Directory Administration
-
-\- File Server Configuration
-
-\- NTFS Permission Management
-
-\- Share Permission Configuration
-
-\- Security Group Administration
-
-\- Role-Based Access Control (RBAC)
-
-\- Principle of Least Privilege
-
-\- Enterprise Access Management
-
-
-
-\---
-
-
-
-\# Outcome
-
-
-
-Successfully implemented a secure enterprise file server using Active Directory security groups and NTFS permissions.
-
-
-
-Departmental shared folders were configured to ensure users receive access only to the resources required for their job role while protecting sensitive organizational data.
-
-
-
-This implementation follows Microsoft Windows Server administration best practices and demonstrates practical experience with enterprise file server deployment and access control.
-
+The file server provides secure, centralized access to departmental resources through the integration of SMB file sharing, NTFS permissions, and Active Directory Security Groups. By diagnosing and resolving a Share permission issue during implementation, this phase demonstrates not only the configuration of enterprise file services but also the troubleshooting methodology used to identify and correct access control problems in a Windows Server environment.

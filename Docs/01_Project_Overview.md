@@ -2,49 +2,15 @@
 
 
 
-\## Purpose
+\## Objective
 
 
 
-The Active Directory Home Lab is a hands-on systems administration project designed to simulate an enterprise Windows domain environment. The lab demonstrates the implementation of Active Directory Domain Services (AD DS), Domain Name System (DNS), organizational design, security group management, and other core Windows Server technologies commonly used in business environments.
+The objective of this project was to design, deploy, and validate a small enterprise Active Directory environment that demonstrates the core responsibilities of a Windows Server administrator. The lab focuses on centralized identity management, authentication, authorization, security policy enforcement, and secure resource access using Microsoft Active Directory Domain Services (AD DS).
 
 
 
-This project is being developed as part of my cybersecurity and IT infrastructure portfolio to demonstrate practical experience with Windows Server administration, identity and access management, and enterprise documentation.
-
-
-
-\---
-
-
-
-\## Objectives
-
-
-
-The primary objectives of this project are to:
-
-
-
-\- Build a Windows Server 2022 Domain Controller
-
-\- Configure Active Directory Domain Services (AD DS)
-
-\- Deploy and configure DNS
-
-\- Design an enterprise Organizational Unit (OU) structure
-
-\- Implement security groups using industry best practices
-
-\- Create and manage domain user accounts
-
-\- Join Windows client computers to the domain
-
-\- Configure Group Policy Objects (GPOs)
-
-\- Implement shared folders and NTFS permissions
-
-\- Practice common systems administration and Help Desk tasks
+Rather than simply installing Windows Server, this project simulates the deployment of a corporate network where users, departments, security groups, Group Policy Objects (GPOs), and shared resources are managed from a centralized domain controller.
 
 
 
@@ -52,63 +18,33 @@ The primary objectives of this project are to:
 
 
 
-\## Technologies Used
+\# Project Scope
 
 
 
-| Technology | Purpose |
-
-|------------|---------|
-
-| Oracle VirtualBox | Virtualization platform |
-
-| Windows Server 2022 | Domain Controller |
-
-| Active Directory Domain Services | Identity and access management |
-
-| DNS | Name resolution |
-
-| Windows Administration Tools | Server management |
-
-| PowerShell \*(Planned)\* | Automation and administration |
-
-| Windows 11 \*(Planned)\* | Domain-joined client workstation |
+This lab includes the deployment and configuration of the following enterprise technologies:
 
 
 
-\---
+\- Windows Server 2022 Domain Controller
 
+\- Active Directory Domain Services (AD DS)
 
+\- Domain Name System (DNS)
 
-\## Project Scope
-
-
-
-This project follows a phased implementation approach. Each phase builds on the previous one while documenting the configuration, validation, and administrative tasks performed.
-
-
-
-Current implementation includes:
-
-
-
-\- Windows Server installation
-
-\- Static IP configuration
-
-\- Active Directory installation
-
-\- Domain Controller promotion
-
-\- DNS configuration
-
-\- Organizational Unit structure
+\- Organizational Units (OUs)
 
 \- Security Groups
 
+\- Domain User Accounts
 
+\- Group Policy
 
-Future phases will expand the environment with client systems, Group Policy, file services, and additional enterprise administration tasks.
+\- SMB File Services
+
+\- NTFS Permissions
+
+\- Windows 11 Domain-Joined Client
 
 
 
@@ -116,7 +52,167 @@ Future phases will expand the environment with client systems, Group Policy, fil
 
 
 
-\## Skills Demonstrated
+\# Business Scenario
+
+
+
+A fictional organization requires a centralized directory service to manage employee identities, departmental resources, and security policies.
+
+
+
+The organization consists of multiple departments including:
+
+
+
+\- Information Technology (IT)
+
+\- Human Resources (HR)
+
+\- Finance
+
+
+
+Each department requires:
+
+
+
+\- Dedicated user accounts
+
+\- Department-specific security groups
+
+\- Controlled access to shared folders
+
+\- Centralized password policies
+
+\- Consistent workstation security settings
+
+
+
+Instead of configuring each workstation individually, administrators manage the environment from a single domain controller using Active Directory and Group Policy.
+
+
+
+\---
+
+
+
+\# Project Goals
+
+
+
+The primary goals of this project were to:
+
+
+
+\- Deploy a functional Active Directory domain.
+
+\- Configure centralized authentication and authorization.
+
+\- Organize directory objects using Organizational Units.
+
+\- Implement Role-Based Access Control (RBAC).
+
+\- Secure departmental file shares using Share and NTFS permissions.
+
+\- Apply enterprise security policies through Group Policy Objects.
+
+\- Join a Windows 11 workstation to the domain.
+
+\- Validate user authentication and resource access.
+
+
+
+\---
+
+
+
+\# Enterprise Concepts Demonstrated
+
+
+
+This project demonstrates several core Windows Server administration concepts commonly used in enterprise environments.
+
+
+
+\### Identity Management
+
+
+
+Active Directory provides centralized management of users, groups, and computers.
+
+
+
+\### Authentication
+
+
+
+Users authenticate against the domain controller rather than maintaining separate local accounts on every workstation.
+
+
+
+\### Authorization
+
+
+
+Access to resources is determined by group membership and assigned permissions instead of assigning permissions directly to individual users.
+
+
+
+\### Role-Based Access Control (RBAC)
+
+
+
+Departmental security groups are used to simplify permission management and improve scalability.
+
+
+
+\### Centralized Administration
+
+
+
+Administrative tasks such as password policies, workstation security, and account management are performed centrally from the domain controller.
+
+
+
+\---
+
+
+
+\# Expected Outcomes
+
+
+
+Upon completion of this project, the environment successfully demonstrated:
+
+
+
+\- Centralized domain authentication
+
+\- DNS name resolution
+
+\- Organizational Unit management
+
+\- User and group administration
+
+\- Group Policy deployment
+
+\- Secure departmental file sharing
+
+\- Domain workstation integration
+
+\- Validation of authentication and authorization controls
+
+
+
+\---
+
+
+
+\# Skills Developed
+
+
+
+This project provided practical experience in:
 
 
 
@@ -124,13 +220,35 @@ Future phases will expand the environment with client systems, Group Policy, fil
 
 \- Active Directory Administration
 
-\- DNS Administration
+\- DNS Configuration
 
-\- Organizational Design
+\- Organizational Unit Design
 
 \- Security Group Management
 
-\- Enterprise Documentation
+\- Group Policy Management
 
-\- Systems Administration
+\- SMB File Sharing
+
+\- NTFS Permission Management
+
+\- Domain Administration
+
+\- Enterprise Troubleshooting
+
+\- Role-Based Access Control (RBAC)
+
+\- Windows Client Management
+
+
+
+\---
+
+
+
+\# Summary
+
+
+
+This lab demonstrates the deployment of a functional enterprise Active Directory environment that closely reflects real-world Windows domain administration. By integrating identity management, security policies, and controlled access to shared resources, the project provides hands-on experience with the technologies and administrative practices commonly used in corporate IT environments.
 

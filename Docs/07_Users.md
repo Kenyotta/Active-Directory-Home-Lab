@@ -1,44 +1,16 @@
-\# User Management
+\# Domain Users
 
 
 
-\## Purpose
+\## Overview
 
 
 
-User accounts provide individuals with authenticated access to domain resources such as workstations, file shares, applications, and network services. Proper user account management is essential for maintaining security, enforcing organizational policies, and supporting day-to-day business operations.
+User accounts represent the identities of individuals within an Active Directory environment. Rather than creating local accounts on each workstation, Active Directory centralizes user management, allowing authentication, authorization, and resource access to be controlled from the Domain Controller.
 
 
 
-This phase focused on creating standardized user accounts, organizing them within departmental Organizational Units (OUs), and assigning appropriate security group memberships based on job responsibilities.
-
-
-
-\---
-
-
-
-\# User Provisioning Strategy
-
-
-
-Users were created within their respective departmental Organizational Units rather than the default \*\*Users\*\* container.
-
-
-
-This approach provides several advantages:
-
-
-
-\- Simplifies administration
-
-\- Supports future Group Policy deployment
-
-\- Improves organizational structure
-
-\- Makes delegated administration easier
-
-\- Supports enterprise scalability
+In this lab, representative users were created for multiple departments and assigned to department-specific security groups to demonstrate centralized identity management and Role-Based Access Control (RBAC).
 
 
 
@@ -46,27 +18,23 @@ This approach provides several advantages:
 
 
 
-\# Naming Convention
+\# Objectives
 
 
 
-A consistent naming convention was adopted to simplify administration and improve account identification.
+The goals of this phase were to:
 
 
 
-| Attribute | Format | Example |
+\- Create domain user accounts
 
-|----------|---------|---------|
+\- Organize users within Organizational Units
 
-| Username | First initial + Last Name | ecarter |
+\- Assign users to Security Groups
 
-| Display Name | First Name Last Name | Ethan Carter |
+\- Implement Role-Based Access Control (RBAC)
 
-| User Principal Name (UPN) | username@corp.local | ecarter@corp.local |
-
-
-
-Consistent naming conventions improve administrative efficiency and reduce the likelihood of duplicate or inconsistent accounts.
+\- Prepare users for authentication and file access testing
 
 
 
@@ -74,31 +42,69 @@ Consistent naming conventions improve administrative efficiency and reduce the l
 
 
 
-\# Administrative Accounts
+\# User Accounts Created
 
 
 
-Administrative accounts are separated from standard user accounts to support the Principle of Least Privilege.
+The following domain users were created during this lab:
 
 
 
-Rather than performing daily activities with privileged credentials, administrators use dedicated administrative accounts only when elevated permissions are required.
+| User | Username | Department | Security Group |
+
+|------|----------|------------|----------------|
+
+| Ethan Carter | ecarter | IT | GG\_IT\_Staff |
+
+| Sophia Reed | sreed | HR | GG\_HR\_Staff |
+
+| Liam Turner | lturner | Finance | GG\_Finance\_Staff |
 
 
 
-Example:
+Each account represents a typical employee within the organization and is managed centrally through Active Directory.
 
 
 
-| Standard Account | Administrative Account |
-
-|-----------------|------------------------|
-
-| keave | adm\_keave |
+\---
 
 
 
-This separation helps reduce the risk of accidental system changes and limits exposure if a standard user account is compromised.
+\# User Organization
+
+
+
+Each user account was placed in the appropriate Organizational Unit (OU) based on department.
+
+
+
+```
+
+corp.local
+
+│
+
+├── IT
+
+│     └── Ethan Carter
+
+│
+
+├── HR
+
+│     └── Sophia Reed
+
+│
+
+└── Finance
+
+&#x20;     └── Liam Turner
+
+```
+
+
+
+Organizing users by department simplifies administration and supports targeted Group Policy deployment.
 
 
 
@@ -110,33 +116,23 @@ This separation helps reduce the risk of accidental system changes and limits ex
 
 
 
-Users were assigned to department-specific Global Security Groups based on their job function.
+Each user was added to the appropriate department Security Group.
 
 
 
-Examples include:
+| User | Group Membership |
+
+|------|------------------|
+
+| Ethan Carter | Domain Users, GG\_IT\_Staff |
+
+| Sophia Reed | Domain Users, GG\_HR\_Staff |
+
+| Liam Turner | Domain Users, GG\_Finance\_Staff |
 
 
 
-| Department | Security Group |
-
-|------------|----------------|
-
-| IT | GG\_IT\_Staff |
-
-| Human Resources | GG\_HR\_Staff |
-
-| Finance | GG\_Finance\_Staff |
-
-| Marketing | GG\_Marketing\_Staff |
-
-| Sales | GG\_Sales\_Staff |
-
-| Executive | GG\_Executive\_Staff |
-
-
-
-This implementation supports Role-Based Access Control (RBAC), allowing permissions to be managed through security groups rather than individual user accounts.
+Using Security Groups instead of assigning permissions directly to users follows Microsoft's recommended administration model.
 
 
 
@@ -144,27 +140,95 @@ This implementation supports Role-Based Access Control (RBAC), allowing permissi
 
 
 
-\# Benefits of Group-Based Administration
+\# Account Configuration
 
 
 
-Managing users through security groups provides several advantages:
+Each user account was configured with:
 
 
 
-\- Simplified permission management
+\- Unique username
 
-\- Easier onboarding and offboarding
+\- Secure password
 
-\- Reduced administrative effort
+\- User must change password at first logon
 
-\- Improved security
+\- Enabled account
 
-\- Consistent access control
+\- Membership in the appropriate Security Group
 
 
 
-As employees change roles, administrators only need to modify group membership rather than reconfigure permissions across multiple resources.
+These settings reflect common practices when provisioning new employees in an enterprise environment.
+
+
+
+\---
+
+
+
+\# Authentication Process
+
+
+
+When a domain user signs in to a domain-joined workstation:
+
+
+
+1\. The workstation contacts the Domain Controller.
+
+2\. Active Directory validates the user's credentials.
+
+3\. Group memberships are evaluated.
+
+4\. Group Policy Objects (GPOs) are applied.
+
+5\. The user receives access only to authorized resources.
+
+
+
+This centralized authentication process ensures consistent security across all domain-joined systems.
+
+
+
+\---
+
+
+
+\# Role-Based Access Control (RBAC)
+
+
+
+Access to resources is determined by Security Group membership rather than individual user permissions.
+
+
+
+Example:
+
+
+
+```
+
+Ethan Carter
+
+&#x20;     │
+
+&#x20;     ▼
+
+GG\_IT\_Staff
+
+&#x20;     │
+
+&#x20;     ▼
+
+IT Department Share
+
+```
+
+
+
+This design simplifies administration by allowing access changes to be made through group membership instead of modifying resource permissions for individual users.
 
 
 
@@ -176,39 +240,27 @@ As employees change roles, administrators only need to modify group membership r
 
 
 
-The following items were verified:
+The following validation steps were completed:
 
 
 
-\- User accounts created successfully
+\- User accounts successfully created
 
-\- User accounts placed in the correct Organizational Units
+\- Users placed in the correct Organizational Units
 
-\- Naming conventions applied consistently
+\- Group memberships verified
 
-\- User Principal Names configured correctly
+\- Users authenticated successfully to the domain
 
-\- Security group memberships verified
+\- Password change at first logon completed
 
+\- Successful access to authorized resources confirmed
 
-
-\---
-
-
-
-\# Skills Demonstrated
+\- Unauthorized access to restricted departmental resources denied
 
 
 
-\- Active Directory User Administration
-
-\- Identity Management
-
-\- User Provisioning
-
-\- Role-Based Access Control (RBAC)
-
-\- Enterprise Account Management
+These tests verified that user provisioning and RBAC were functioning as intended.
 
 
 
@@ -216,21 +268,39 @@ The following items were verified:
 
 
 
-\# Screenshots
+\# Enterprise Best Practices Applied
 
 
 
-Include:
+The user management process followed several enterprise best practices:
 
 
 
-\- Creating a new user
+\- Unique user accounts for each employee
 
-\- Completed user properties
+\- Department-based Organizational Units
 
-\- Department Organizational Unit with users
+\- Group-based permission management
 
-\- User added to a security group
+\- Least Privilege access model
 
-\- Administrative account example
+\- Centralized authentication
+
+\- Standardized account provisioning
+
+
+
+These practices improve security, simplify administration, and support future growth of the Active Directory environment.
+
+
+
+\---
+
+
+
+\# Summary
+
+
+
+The creation of domain user accounts established centralized identity management within the Active Directory environment. By organizing users into departmental Organizational Units and assigning them to Security Groups, the lab demonstrates how enterprises implement secure, scalable authentication and authorization using Role-Based Access Control.
 

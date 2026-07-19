@@ -2,15 +2,59 @@
 
 
 
-\## Purpose
+\## Overview
 
 
 
-Active Directory Domain Services (AD DS) provides centralized authentication, authorization, and identity management for Windows-based enterprise environments. By promoting the server to a Domain Controller, the lab gained the ability to centrally manage users, computers, groups, and security policies.
+Active Directory Domain Services (AD DS) provides centralized identity and access management for Windows environments. In this lab, Windows Server 2022 was promoted to a Domain Controller, creating the \*\*corp.local\*\* domain. This enabled centralized authentication, authorization, DNS services, and policy management for all domain-joined systems.
 
 
 
-This phase established the foundation of the enterprise environment by deploying a new Active Directory forest and configuring the server as the first Domain Controller.
+\---
+
+
+
+\# Objectives
+
+
+
+The goals of this phase were to:
+
+
+
+\- Install the Active Directory Domain Services role
+
+\- Promote the server to a Domain Controller
+
+\- Create a new Active Directory forest
+
+\- Configure DNS integration
+
+\- Verify successful domain deployment
+
+
+
+\---
+
+
+
+\# Server Configuration
+
+
+
+| Setting | Value |
+
+|----------|-------|
+
+| Server Name | DC01 |
+
+| Operating System | Windows Server 2022 |
+
+| Domain Name | corp.local |
+
+| Forest Functional Level | Windows Server 2016 (Default) |
+
+| DNS | Installed with AD DS |
 
 
 
@@ -22,23 +66,23 @@ This phase established the foundation of the enterprise environment by deploying
 
 
 
-Active Directory Domain Services was installed using Server Manager through the \*\*Add Roles and Features Wizard\*\*.
+The \*\*Active Directory Domain Services\*\* server role was installed using \*\*Server Manager\*\*.
 
 
 
-The following server roles were installed:
+During installation, the following components were included:
 
 
 
-\- Active Directory Domain Services (AD DS)
+\- Active Directory Domain Services
+
+\- Management Tools
 
 \- DNS Server
 
-\- Group Policy Management
 
 
-
-The required management tools were installed automatically during the role installation.
+Installing these components prepared the server for promotion to a Domain Controller.
 
 
 
@@ -50,51 +94,39 @@ The required management tools were installed automatically during the role insta
 
 
 
-After the AD DS role was installed, the server was promoted to the first Domain Controller in a new Active Directory forest.
+After the AD DS role was installed, the server was promoted to a Domain Controller.
 
 
 
-\### Forest Configuration
+A new Active Directory forest was created with the following domain:
 
 
 
-| Setting | Value |
+```
 
-|----------|-------|
+corp.local
 
-| Forest Root Domain | corp.local |
-
-| NetBIOS Name | CORP |
-
-| Forest Functional Level | Windows Server 2016 |
-
-| Domain Functional Level | Windows Server 2016 |
+```
 
 
 
-\---
+During promotion, the following settings were configured:
 
 
 
-\# Domain Controller Configuration
+\- New Forest
+
+\- Domain Name: corp.local
+
+\- DNS Server Installed
+
+\- Global Catalog Enabled
+
+\- Directory Services Restore Mode (DSRM) password configured
 
 
 
-The following services were configured during promotion:
-
-
-
-\- Domain Name System (DNS)
-
-\- Global Catalog (GC)
-
-\- SYSVOL
-
-\- Active Directory Database (NTDS)
-
-
-
-The server was configured as the first Global Catalog within the forest to provide authentication and directory lookup services.
+The server automatically restarted after the promotion process completed.
 
 
 
@@ -102,11 +134,11 @@ The server was configured as the first Global Catalog within the forest to provi
 
 
 
-\# DNS Configuration
+\# DNS Integration
 
 
 
-DNS was installed alongside Active Directory and configured automatically during Domain Controller promotion.
+DNS was installed alongside Active Directory to support domain services.
 
 
 
@@ -116,13 +148,15 @@ DNS provides:
 
 \- Name resolution
 
-\- Active Directory service location
+\- Domain controller location
 
-\- Domain authentication support
+\- Client authentication
+
+\- Active Directory replication support
 
 
 
-Following installation, the \*\*corp.local\*\* Forward Lookup Zone was created automatically.
+The Domain Controller was configured to use itself as its preferred DNS server.
 
 
 
@@ -134,35 +168,27 @@ Following installation, the \*\*corp.local\*\* Forward Lookup Zone was created a
 
 
 
-After the server restarted, the following items were verified:
+After the server restarted, several validation steps were performed.
 
 
 
-\- Active Directory Users and Computers opened successfully.
-
-\- DNS Manager displayed the corp.local zone.
-
-\- The server authenticated using the CORP domain.
-
-\- Server Manager reported the AD DS role as installed.
-
-\- Domain Controller promotion completed successfully.
+Successful verification included:
 
 
 
-\---
+\- Logging into the domain
+
+\- Opening Active Directory Users and Computers
+
+\- Opening DNS Manager
+
+\- Confirming the \*\*corp.local\*\* domain existed
+
+\- Verifying the Domain Controller appeared under the Domain Controllers organizational unit
 
 
 
-\# Why Active Directory Matters
-
-
-
-Active Directory provides centralized administration for enterprise environments.
-
-
-
-Instead of maintaining separate local accounts on every workstation, administrators manage identities from a single location. This allows organizations to implement consistent security policies, simplify user administration, and control access to network resources.
+These checks confirmed that the Domain Controller and Active Directory services were operating correctly.
 
 
 
@@ -170,21 +196,33 @@ Instead of maintaining separate local accounts on every workstation, administrat
 
 
 
-\# Skills Demonstrated
+\# Why Active Directory?
 
 
 
-\- Active Directory Domain Services
+Using Active Directory centralizes administration across an organization.
 
-\- Windows Server Administration
 
-\- Domain Controller Deployment
 
-\- DNS Administration
+Benefits include:
 
-\- Identity and Access Management
 
-\- Enterprise Infrastructure Deployment
+
+\- Centralized user management
+
+\- Centralized authentication
+
+\- Simplified authorization
+
+\- Group-based access control
+
+\- Centralized security policy enforcement
+
+\- Scalable management of users and computers
+
+
+
+Without Active Directory, each workstation would require separate local user accounts and independent configuration, increasing administrative overhead and reducing security.
 
 
 
@@ -192,25 +230,39 @@ Instead of maintaining separate local accounts on every workstation, administrat
 
 
 
-\# Screenshots
+\# Enterprise Best Practices Applied
 
 
 
-Include screenshots of:
+The deployment followed several enterprise administration best practices:
 
 
 
-\- Add Roles and Features Wizard
+\- Dedicated Domain Controller
 
-\- AD DS installation complete
+\- Static IP addressing
 
-\- Promote this server to a Domain Controller
+\- Integrated DNS
 
-\- Domain Controller Options
+\- Centralized authentication
 
-\- Active Directory Users and Computers
+\- New forest deployment
 
-\- DNS Manager
+\- Separation of identity management from client systems
 
-\- Server Manager after promotion
+
+
+These practices provide a secure and scalable foundation for managing Windows environments.
+
+
+
+\---
+
+
+
+\# Summary
+
+
+
+Deploying Active Directory Domain Services established the core identity infrastructure for the lab environment. By creating the \*\*corp.local\*\* domain and promoting \*\*DC01\*\* to a Domain Controller, the environment gained centralized authentication, DNS services, and the foundation required for Organizational Units, Security Groups, Group Policy, and domain-joined client management.
 

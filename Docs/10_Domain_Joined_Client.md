@@ -2,15 +2,15 @@
 
 
 
-\## Purpose
+\## Overview
 
 
 
-A domain-joined client demonstrates how end-user workstations integrate with Active Directory. Joining a Windows 11 computer to the domain enables centralized authentication, policy enforcement, software management, and access to shared network resources.
+A Windows 11 Pro workstation was deployed and joined to the \*\*corp.local\*\* Active Directory domain to validate centralized identity management, Group Policy application, DNS functionality, and Role-Based Access Control (RBAC).
 
 
 
-This phase of the project will focus on deploying a Windows 11 virtual machine, joining it to the \*\*corp.local\*\* domain, and validating communication with the Domain Controller.
+Joining the workstation to the domain transformed it from a standalone computer into a managed enterprise endpoint capable of authenticating users through Active Directory and receiving centrally managed security policies.
 
 
 
@@ -22,23 +22,23 @@ This phase of the project will focus on deploying a Windows 11 virtual machine, 
 
 
 
-The following objectives are planned for this phase:
+The goals of this phase were to:
 
 
 
 \- Deploy a Windows 11 virtual machine
 
-\- Configure network connectivity
+\- Configure network settings
 
-\- Join the workstation to the \*\*corp.local\*\* domain
+\- Join the workstation to the Active Directory domain
 
-\- Authenticate using domain user accounts
+\- Validate domain authentication
 
-\- Verify DNS resolution
+\- Verify DNS functionality
 
-\- Test Group Policy application
+\- Confirm Group Policy application
 
-\- Access shared network resources
+\- Test Role-Based Access Control (RBAC)
 
 
 
@@ -46,21 +46,23 @@ The following objectives are planned for this phase:
 
 
 
-\# Planned Client Configuration
+\# Client Configuration
 
 
 
-| Component | Configuration |
+| Setting | Value |
 
-|----------|---------------|
+|----------|-------|
 
-| Operating System | Windows 11 Enterprise Evaluation |
+| Operating System | Windows 11 Pro |
 
-| Computer Name | WIN11-01 |
+| Computer Name | CLIENT01 |
 
 | Domain | corp.local |
 
-| Authentication | Active Directory Domain Account |
+| Domain Controller | DC01 |
+
+| Preferred DNS Server | 192.168.10.10 |
 
 
 
@@ -68,53 +70,27 @@ The following objectives are planned for this phase:
 
 
 
-\# Planned Validation
+\# Network Configuration
 
 
 
-After joining the client to the domain, the following items will be verified:
+The workstation was connected to two virtual network adapters.
 
 
 
-\- Successful domain join
-
-\- Domain user authentication
-
-\- DNS name resolution
-
-\- Communication with the Domain Controller
-
-\- Group Policy application
-
-\- Access to shared folders
-
-\- Network connectivity
+\## NAT Adapter
 
 
 
-\---
+Purpose:
 
 
 
-\# Enterprise Benefits
+\- Internet access
 
+\- Windows Updates
 
-
-Domain-joined workstations allow organizations to:
-
-
-
-\- Centralize user authentication
-
-\- Apply Group Policy automatically
-
-\- Simplify workstation management
-
-\- Standardize security settings
-
-\- Reduce administrative overhead
-
-\- Improve security through centralized identity management
+\- Software downloads
 
 
 
@@ -122,49 +98,27 @@ Domain-joined workstations allow organizations to:
 
 
 
-\# Troubleshooting
+\## Internal Network (LABNET)
 
 
 
-If the client cannot join the domain, the following areas will be reviewed:
+Purpose:
 
 
 
-\- Network connectivity
+\- Active Directory communication
 
-\- DNS configuration
+\- DNS
 
-\- IP addressing
+\- Authentication
 
-\- Domain Controller availability
+\- SMB File Sharing
 
-\- Time synchronization
-
-\- Firewall configuration
+\- Group Policy
 
 
 
-\---
-
-
-
-\# Skills Demonstrated
-
-
-
-Upon completion of this phase, this project will demonstrate:
-
-
-
-\- Windows 11 Administration
-
-\- Active Directory Client Management
-
-\- DNS Troubleshooting
-
-\- Domain Administration
-
-\- Enterprise Workstation Deployment
+The workstation was configured to use the Domain Controller as its preferred DNS server to ensure proper domain name resolution.
 
 
 
@@ -172,23 +126,289 @@ Upon completion of this phase, this project will demonstrate:
 
 
 
-\# Screenshots
+\# Domain Join Process
 
 
 
-To be added after implementation:
+After network connectivity was verified, the workstation was joined to the \*\*corp.local\*\* domain.
 
 
 
-\- Windows 11 system information
+The process included:
 
-\- Domain Join dialog
 
-\- Successful domain authentication
 
-\- Active Directory computer object
+\- Specifying the Active Directory domain
 
-\- Client logged in with a domain account
+\- Providing Domain Administrator credentials
 
-\- Network and DNS verification
+\- Restarting the workstation
+
+\- Logging in using a domain user account
+
+
+
+Following the restart, the workstation became a managed member of the Active Directory environment.
+
+
+
+\---
+
+
+
+\# Domain Authentication
+
+
+
+Authentication was validated using the \*\*Ethan Carter\*\* domain account.
+
+
+
+Successful sign-in confirmed that:
+
+
+
+\- CLIENT01 could communicate with DC01
+
+\- Active Directory authentication was functioning
+
+\- Domain credentials were accepted
+
+\- User profile creation completed successfully
+
+
+
+\---
+
+
+
+\# DNS Validation
+
+
+
+DNS functionality was verified to ensure the workstation could locate domain resources.
+
+
+
+Validation included:
+
+
+
+```
+
+ping 192.168.10.10
+
+```
+
+
+
+```
+
+nslookup corp.local
+
+```
+
+
+
+Successful responses confirmed that the Domain Controller was providing DNS services and that name resolution was functioning correctly.
+
+
+
+\---
+
+
+
+\# Group Policy Validation
+
+
+
+Domain Group Policies were refreshed using:
+
+
+
+```
+
+gpupdate /force
+
+```
+
+
+
+Applied policies were verified with:
+
+
+
+```
+
+gpresult /r
+
+```
+
+
+
+Validation confirmed that:
+
+
+
+\- Password Policy was applied
+
+\- Account Lockout Policy was active
+
+\- Screen Lock Policy was enforced
+
+\- CLIENT01 successfully received domain Group Policy Objects
+
+
+
+\---
+
+
+
+\# Role-Based Access Control (RBAC) Validation
+
+
+
+Role-Based Access Control was validated using departmental user accounts.
+
+
+
+\## Ethan Carter (IT)
+
+
+
+| Test | Result |
+
+|------|--------|
+
+| Domain Login | ✅ Success |
+
+| Access IT Share | ✅ Success |
+
+| Create test.txt | ✅ Success |
+
+| Access HR Share | ❌ Access Denied |
+
+| Access Finance Share | ❌ Access Denied |
+
+
+
+\---
+
+
+
+\## Sophia Reed (HR)
+
+
+
+| Test | Result |
+
+|------|--------|
+
+| Domain Login | ✅ Success |
+
+| Access HR Share | ✅ Success |
+
+| Access IT Share | ❌ Access Denied |
+
+| Access Finance Share | ❌ Access Denied |
+
+
+
+\---
+
+
+
+\## Liam Turner (Finance)
+
+
+
+| Test | Result |
+
+|------|--------|
+
+| Domain Login | ✅ Success |
+
+| Access Finance Share | ✅ Success |
+
+| Access IT Share | ❌ Access Denied |
+
+| Access HR Share | ❌ Access Denied |
+
+
+
+These validation tests confirmed that access to shared resources was determined by Security Group membership and enforced through NTFS permissions, successfully implementing Role-Based Access Control (RBAC).
+
+
+
+\---
+
+
+
+\# Enterprise Concepts Demonstrated
+
+
+
+This phase demonstrates several core enterprise administration concepts:
+
+
+
+\- Domain Authentication
+
+\- Centralized Identity Management
+
+\- DNS Name Resolution
+
+\- Group Policy Processing
+
+\- SMB File Access
+
+\- Security Group Authorization
+
+\- Role-Based Access Control (RBAC)
+
+\- Least Privilege
+
+
+
+Together, these services provide a secure and centrally managed Windows environment.
+
+
+
+\---
+
+
+
+\# Validation Summary
+
+
+
+The following functionality was successfully verified:
+
+
+
+\- Windows 11 successfully joined the domain
+
+\- Domain users authenticated successfully
+
+\- DNS resolved domain resources
+
+\- Group Policy Objects applied correctly
+
+\- Departmental file shares were accessible only to authorized users
+
+\- Unauthorized access attempts were denied
+
+\- Role-Based Access Control functioned as designed
+
+
+
+\---
+
+
+
+\# Summary
+
+
+
+The successful deployment of the Windows 11 domain-joined workstation demonstrates the complete integration of client systems into the Active Directory environment. Authentication, DNS, Group Policy, and file access controls were validated end-to-end, confirming that the lab accurately reflects the centralized management and security practices used in enterprise Windows networks.
 

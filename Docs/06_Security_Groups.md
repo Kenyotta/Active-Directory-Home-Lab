@@ -1,228 +1,140 @@
-\# Security Groups
+# Security Groups
 
+## Overview
 
+Security Groups are a fundamental component of Active Directory that simplify access management by allowing permissions to be assigned to groups rather than individual users. This approach supports Role-Based Access Control (RBAC), reduces administrative overhead, and improves the scalability of the environment.
 
-\## Purpose
+In this lab, department-specific security groups were created to manage access to shared resources and demonstrate enterprise access control practices.
 
+---
 
+# Objectives
 
-Security Groups simplify identity and access management by allowing permissions to be assigned to groups instead of individual user accounts. This approach improves security, reduces administrative overhead, and supports scalable access control as an organization grows.
+The goals of this phase were to:
 
+- Create department-based security groups
+- Assign users to appropriate groups
+- Prepare groups for Role-Based Access Control (RBAC)
+- Simplify permission management
+- Follow enterprise identity management best practices
 
+---
 
-In this lab, Global Security Groups were created to represent each department and administrative role within the organization.
+# Security Groups Created
 
+The following Global Security Groups were created within the **corp.local** domain:
 
+| Group Name | Purpose |
+|------------|---------|
+| GG_IT_Staff | IT department users |
+| GG_HR_Staff | Human Resources users |
+| GG_Finance_Staff | Finance department users |
 
-\---
+Each group represents a department within the organization and serves as the primary method for assigning access to shared resources.
 
+---
 
+# Group Scope
 
-\# Security Group Design
+All groups were configured as:
 
+- **Group Type:** Security
+- **Group Scope:** Global
 
+Global Security Groups are commonly used to organize users with similar job functions and are recommended for assigning permissions within a single Active Directory domain.
 
-Each department and administrative team was assigned its own Global Security Group.
+---
 
+# Role-Based Access Control (RBAC)
 
+Rather than assigning permissions directly to individual user accounts, permissions are assigned to security groups.
 
-This design follows Microsoft's recommended practice of assigning permissions to groups rather than directly to user accounts.
+The access model follows this structure:
 
-
-
-As employees are hired, transferred, or leave the organization, administrators only need to update group membership instead of modifying permissions on individual resources.
-
-
-
-\---
-
-
-
-\# Security Groups Created
-
-
-
-| Security Group | Purpose |
-
-|---------------|---------|
-
-| GG\_Domain\_Admins | Domain administrators |
-
-| GG\_HelpDesk | Help Desk administrators |
-
-| GG\_Executive\_Staff | Executive department users |
-
-| GG\_Finance\_Staff | Finance department users |
-
-| GG\_HR\_Staff | Human Resources users |
-
-| GG\_IT\_Staff | Information Technology users |
-
-| GG\_Marketing\_Staff | Marketing department users |
-
-| GG\_Sales\_Staff | Sales department users |
-
-
-
-\---
-
-
-
-\# Group Configuration
-
-
-
-All groups were configured using the following settings:
-
-
-
-| Setting | Value |
-
-|----------|-------|
-
-| Group Scope | Global |
-
-| Group Type | Security |
-
-
-
-Global Security Groups were selected because they are the recommended group type for organizing users within a single Active Directory domain.
-
-
-
-\---
-
-
-
-\# Why Use Security Groups?
-
-
-
-Managing permissions through groups provides several advantages:
-
-
-
-\- Simplifies user administration
-
-\- Supports the Principle of Least Privilege
-
-\- Reduces configuration errors
-
-\- Makes permission management more efficient
-
-\- Supports future file share permissions
-
-\- Simplifies Group Policy filtering
-
-
-
-Rather than assigning permissions directly to individual users, access is granted to security groups. Users inherit permissions through their group membership.
-
-
-
-\---
-
-
-
-\# Enterprise Best Practice
-
-
-
-This project follows Microsoft's recommended approach for identity management:
-
-
-
-\*\*Users → Security Groups → Permissions\*\*
-
-
+```
+User
+   │
+   ▼
+Security Group
+   │
+   ▼
+Shared Resource
+```
 
 For example:
 
-
-
 ```
-
 Ethan Carter
-
-&#x20;       │
-
-&#x20;       ▼
-
-GG\_IT\_Staff
-
-&#x20;       │
-
-&#x20;       ▼
-
-IT Shared Folder
-
+      │
+      ▼
+GG_IT_Staff
+      │
+      ▼
+\\DC01\IT
 ```
 
+This design allows administrators to grant or revoke access by changing group membership rather than modifying permissions on individual resources.
 
+---
 
-This model improves scalability and makes future administration significantly easier.
+# Benefits of Security Groups
 
+Using Security Groups provides several advantages:
 
+- Simplifies permission management
+- Supports Role-Based Access Control (RBAC)
+- Reduces administrative effort
+- Improves consistency
+- Enhances security
+- Scales efficiently as organizations grow
 
-\---
+For example, when a new IT employee joins the company, adding the user to **GG_IT_Staff** automatically grants access to all resources assigned to that group.
 
+---
 
+# Enterprise Best Practices Applied
 
-\# Validation
+The following best practices were implemented:
 
+- Department-based groups
+- Global Security Groups for user accounts
+- Group-based permission assignments
+- Separation of users and permissions
+- Consistent naming convention using the **GG_** prefix
 
+These practices align with common enterprise Active Directory administration standards.
 
-The following items were verified:
+---
 
+# Validation
 
+After creating the security groups, Active Directory Users and Computers was used to verify:
 
-\- All security groups were successfully created.
+- All groups were successfully created
+- Groups appeared in the appropriate Organizational Units
+- Group scope was configured as Global
+- Group type was configured as Security
 
-\- Group Scope was configured as Global.
+User membership was later validated during authentication and file access testing.
 
-\- Group Type was configured as Security.
+---
 
-\- Groups appeared within the Groups Organizational Unit.
+# Relationship to File Permissions
 
-\- Naming conventions were applied consistently.
+The security groups created during this phase were later used to control access to departmental file shares.
 
+Examples include:
 
+| Security Group | Resource |
+|---------------|----------|
+| GG_IT_Staff | IT Share |
+| GG_HR_Staff | HR Share |
+| GG_Finance_Staff | Finance Share |
 
-\---
+This demonstrates how Active Directory groups integrate with Windows file permissions to provide centralized access management.
 
+---
 
+# Summary
 
-\# Skills Demonstrated
-
-
-
-\- Active Directory Administration
-
-\- Security Group Management
-
-\- Identity and Access Management (IAM)
-
-\- Role-Based Access Control (RBAC)
-
-\- Enterprise Infrastructure Design
-
-
-
-\---
-
-
-
-\# Screenshots
-
-
-
-Include:
-
-
-
-\- Creating a new security group
-
-\- Security Group properties
-
-\- Completed Groups Organizational Unit
-
+Security Groups provide a scalable and efficient method for managing permissions in Active Directory. By assigning permissions to groups instead of individual users, the environment follows Role-Based Access Control principles, simplifies administration, and reflects common enterprise identity and access management practices.

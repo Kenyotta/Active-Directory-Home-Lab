@@ -1,194 +1,161 @@
-\# Group Policy
+# Group Policy
 
+## Overview
 
+Group Policy is a feature of Microsoft Active Directory that enables administrators to centrally manage security settings, user configurations, and computer policies across an entire domain. Rather than configuring each workstation individually, Group Policy Objects (GPOs) allow consistent settings to be automatically applied to domain-joined computers and users.
 
-\## Purpose
+In this lab, several security-focused Group Policies were configured to simulate common enterprise security standards.
 
+---
 
+# Objectives
 
-Group Policy provides centralized management of user and computer settings within an Active Directory environment. It allows administrators to enforce security policies, standardize system configurations, and automate administrative tasks across domain-joined devices.
+The goals of this phase were to:
 
+- Configure domain-wide security policies
+- Enforce password complexity requirements
+- Configure account lockout protection
+- Apply workstation security settings
+- Validate successful Group Policy deployment
 
+---
 
-This phase of the project will focus on implementing Group Policy Objects (GPOs) to improve security, simplify administration, and create a consistent user experience.
+# Group Policies Configured
 
+The following security policies were implemented within the **corp.local** domain.
 
+| Policy | Purpose |
+|----------|---------|
+| Password Policy | Enforce strong passwords |
+| Account Lockout Policy | Protect against password guessing attacks |
+| Screen Lock Policy | Secure unattended workstations |
 
-\---
+These policies were configured using the **Group Policy Management Console (GPMC)** and applied at the domain level.
 
+---
 
+# Password Policy
 
-\# Objectives
+A domain password policy was configured to strengthen account security.
 
+The policy included:
 
+- Password complexity enabled
+- Minimum password length enforced
+- Password history maintained
+- Maximum password age configured
 
-The following Group Policy configurations are planned for this environment:
+These settings help reduce the risk of weak or reused passwords and support enterprise security best practices.
 
+---
 
+# Account Lockout Policy
 
-\- Password Policy
+An account lockout policy was implemented to protect against brute-force password attacks.
 
-\- Account Lockout Policy
+The policy included:
 
-\- Desktop Restrictions
+- Account lockout threshold
+- Lockout duration
+- Lockout counter reset period
 
-\- Windows Security Settings
+When a user exceeds the configured number of failed sign-in attempts, the account is temporarily locked until the defined lockout period expires or an administrator resets the account.
 
-\- Windows Update Configuration
+---
 
-\- User Environment Configuration
+# Screen Lock Policy
 
-\- Administrative Templates
+A workstation security policy was configured to automatically lock inactive sessions.
 
-\- Group Policy Management
+The policy requires users to re-authenticate after the screen saver activates, reducing the risk of unauthorized access to unattended systems.
 
+This control is commonly implemented in enterprise environments to protect sensitive information.
 
+---
 
-\---
+# Centralized Management
 
+One of the primary benefits of Group Policy is centralized administration.
 
+Instead of configuring security settings on every workstation individually, administrators create a single Group Policy Object that is automatically applied to all applicable domain-joined systems.
 
-\# Planned Group Policy Objects
+Benefits include:
 
+- Consistent security configuration
+- Reduced administrative effort
+- Faster policy deployment
+- Improved compliance
+- Simplified management
 
+---
 
-| Group Policy | Purpose |
+# Group Policy Processing
 
-|--------------|---------|
+When a domain user signs in:
 
-| Default Domain Password Policy | Enforce password complexity and expiration |
+1. The workstation authenticates with the Domain Controller.
+2. Applicable Group Policy Objects are identified.
+3. Policies are downloaded from the Domain Controller.
+4. Security settings are applied.
+5. User access is granted based on authentication and authorization.
 
-| Account Lockout Policy | Protect against brute-force attacks |
+This automated process ensures every domain-joined workstation maintains a consistent security baseline.
 
-| Desktop Restrictions | Standardize the desktop environment |
+---
 
-| Windows Update Policy | Configure update behavior |
+# Validation
 
-| Control Panel Restrictions | Limit unauthorized system changes |
+After configuring the policies, the client workstation was updated using:
 
-| Windows Defender Policy | Improve endpoint security |
+```
+gpupdate /force
+```
 
+Policy application was verified using:
 
+```
+gpresult /r
+```
 
-\---
+Validation confirmed:
 
+- Password policy successfully applied
+- Account lockout policy active
+- Screen lock policy enforced
+- Client received domain Group Policy successfully
 
+These checks verified that centralized policy management was functioning correctly.
 
-\# Planned OU Linking
+---
 
+# Enterprise Best Practices Applied
 
+The Group Policy configuration follows several enterprise security best practices:
 
-Group Policy Objects will be linked to Organizational Units based on the systems or users they should affect.
+- Centralized policy management
+- Strong password enforcement
+- Protection against brute-force attacks
+- Automatic workstation locking
+- Consistent security configuration across all domain devices
 
+Using Group Policy reduces configuration drift and ensures all domain-joined systems follow the organization's security standards.
 
+---
 
-Examples include:
+# Business Value
 
+Implementing Group Policy provides organizations with:
 
+- Improved security
+- Reduced administrative overhead
+- Standardized workstation configurations
+- Faster deployment of security controls
+- Easier compliance with organizational policies
 
-\- Workstations OU
+These capabilities make Group Policy one of the most valuable management tools in Windows Server environments.
 
-\- Departments OU
+---
 
-\- Administrative OU
+# Summary
 
-
-
-This approach ensures policies are applied only where appropriate.
-
-
-
-\---
-
-
-
-\# Benefits of Group Policy
-
-
-
-Implementing Group Policy provides several advantages:
-
-
-
-\- Centralized administration
-
-\- Consistent security settings
-
-\- Reduced manual configuration
-
-\- Improved compliance
-
-\- Automated workstation configuration
-
-\- Simplified enterprise management
-
-
-
-\---
-
-
-
-\# Validation
-
-
-
-After implementation, the following items will be verified:
-
-
-
-\- Group Policy Objects created successfully
-
-\- Policies linked to the correct Organizational Units
-
-\- Policies applied successfully to client computers
-
-\- Results verified using `gpupdate` and `gpresult`
-
-
-
-\---
-
-
-
-\# Skills Demonstrated
-
-
-
-Upon completion of this phase, the project will demonstrate:
-
-
-
-\- Group Policy Management
-
-\- Windows Security Administration
-
-\- Active Directory Administration
-
-\- Enterprise Policy Management
-
-
-
-\---
-
-
-
-\# Screenshots
-
-
-
-To be added after implementation:
-
-
-
-\- Group Policy Management Console
-
-\- Password Policy configuration
-
-\- Account Lockout Policy
-
-\- Linked GPOs
-
-\- Resultant Set of Policy (RSoP)
-
-\- gpresult output
-
+Group Policy provides centralized management of security and configuration settings throughout the Active Directory environment. By enforcing password requirements, account lockout protection, and workstation security from the Domain Controller, the lab demonstrates how enterprise administrators maintain consistent security across domain-joined systems while reducing administrative complexity.

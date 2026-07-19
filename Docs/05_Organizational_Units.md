@@ -1,276 +1,159 @@
-\# Organizational Units
+# Organizational Units
 
+## Overview
 
+Organizational Units (OUs) provide a logical structure for organizing users, computers, and other Active Directory objects. Rather than storing every object in the default containers, OUs allow administrators to group resources by department or function, making management, delegation, and Group Policy deployment significantly easier.
 
-\## Purpose
+In this lab, Organizational Units were created to reflect the departmental structure of a small enterprise.
 
+---
 
+# Objectives
 
-Organizational Units (OUs) provide a logical structure for organizing users, computers, and administrative resources within Active Directory. Proper OU design simplifies administration, supports delegated management, and enables targeted Group Policy deployment.
+The goals of this phase were to:
 
+- Create a structured Organizational Unit hierarchy
+- Organize users by department
+- Organize workstations and servers
+- Prepare the environment for Group Policy deployment
+- Improve administrative organization and scalability
 
+---
 
-The OU hierarchy in this lab was designed to resemble the structure of a small-to-medium enterprise while following Active Directory best practices.
+# Organizational Unit Structure
 
-
-
-\---
-
-
-
-\# Organizational Unit Design
-
-
-
-The Active Directory environment was organized into dedicated Organizational Units to separate administrative resources, departments, computers, and servers.
-
-
-
-This design improves scalability, simplifies administration, and prepares the environment for future Group Policy implementation.
-
-
-
-\---
-
-
-
-\# Organizational Structure
-
-
+The following Organizational Units were created within the **corp.local** domain:
 
 ```
-
 corp.local
-
 │
-
-├── Admin
-
-│   ├── Domain Admins
-
-│   └── Help Desk
-
-│
-
-├── Departments
-
-│   ├── Executive
-
-│   ├── Finance
-
-│   ├── Human Resources
-
-│   ├── IT
-
-│   ├── Marketing
-
-│   └── Sales
-
-│
-
-├── Groups
-
-│
-
-├── Servers
-
-│
-
-├── Service Accounts
-
-│
-
-├── Test Accounts
-
-│
-
-└── Workstations
-
-&#x20;   ├── Desktops
-
-&#x20;   └── Laptops
-
+├── IT
+├── HR
+├── Finance
+├── Sales
+├── Executive
+├── Users
+├── Workstations
+└── Servers
 ```
 
+This structure separates administrative objects into logical containers while allowing policies to be targeted to specific departments.
 
+---
 
-\---
+# Departmental OUs
 
+## IT
 
+The IT Organizational Unit contains users responsible for managing the organization's technology infrastructure.
 
-\# Design Decisions
+Typical responsibilities include:
 
+- Systems Administration
+- Network Administration
+- Help Desk
+- Security Administration
 
+---
 
-Several best practices were incorporated into the OU structure.
+## Human Resources (HR)
 
+The HR Organizational Unit contains users responsible for employee records, hiring, onboarding, and personnel management.
 
+Separating HR users helps ensure that sensitive information is protected through department-specific permissions and policies.
 
-\## Administrative Separation
+---
 
+## Finance
 
+The Finance Organizational Unit contains users responsible for financial operations.
 
-Administrative accounts were separated from standard user accounts.
+This separation allows financial resources to be secured independently from other departments.
 
+---
 
+## Sales
 
-This approach supports the Principle of Least Privilege by allowing privileged accounts to be managed independently from everyday user accounts.
+The Sales Organizational Unit provides a location for users responsible for customer engagement and business development.
 
+Separate administration enables future department-specific policies if required.
 
+---
 
-\---
+## Executive
 
+The Executive Organizational Unit represents leadership accounts that may require additional security policies or administrative controls in larger enterprise environments.
 
+Although no specialized policies were implemented in this lab, the OU demonstrates planning for future scalability.
 
-\## Departmental Organization
+---
 
+# Infrastructure OUs
 
+## Users
 
-Each department was assigned its own Organizational Unit.
+The Users Organizational Unit provides a centralized location for standard user accounts that are not department-specific.
 
+---
 
+## Workstations
 
-Benefits include:
+The Workstations Organizational Unit is used to organize domain-joined client computers.
 
+This separation simplifies:
 
+- Computer management
+- Group Policy deployment
+- Security configuration
+- Administrative delegation
 
-\- Easier user administration
+---
 
-\- Simplified permission management
+## Servers
 
-\- Department-specific Group Policies
+The Servers Organizational Unit provides a dedicated location for Windows Server systems within the domain.
 
-\- Better scalability as the organization grows
+Although the current environment contains a single Domain Controller, separating servers into their own OU reflects enterprise best practices and supports future expansion.
 
+---
 
+# Benefits of Organizational Units
 
-\---
+Using Organizational Units provides several administrative advantages:
 
+- Logical organization of Active Directory objects
+- Simplified Group Policy deployment
+- Easier administrative delegation
+- Improved scalability
+- Better separation of departments
+- Reduced administrative complexity
 
+---
 
-\## Computer Organization
+# Enterprise Best Practices Applied
 
+The Organizational Unit design follows several Microsoft Active Directory best practices:
 
+- Separate users from computers
+- Organize resources by department
+- Plan for future growth
+- Create a scalable hierarchy
+- Avoid storing production objects in default containers
+- Prepare the environment for Group Policy targeting
 
-Computer objects will be placed into dedicated Workstation and Server Organizational Units.
+---
 
+# Validation
 
+After creating the Organizational Units, Active Directory Users and Computers was used to verify:
 
-Separating computers by role allows Group Policy Objects (GPOs) to target desktops, laptops, and servers independently.
+- All OUs were successfully created
+- Organizational hierarchy matched the intended design
+- Departmental containers were available for user and computer objects
+- The structure supported future policy deployment
 
+---
 
+# Summary
 
-\---
-
-
-
-\## Service Accounts
-
-
-
-A dedicated OU was created for service accounts.
-
-
-
-Separating service accounts from standard user accounts simplifies administration and supports stronger security practices.
-
-
-
-\---
-
-
-
-\## Test Accounts
-
-
-
-A Test Accounts OU was created to safely validate configurations, permissions, and Group Policy changes without affecting production-style user accounts.
-
-
-
-\---
-
-
-
-\# Validation
-
-
-
-The Organizational Unit hierarchy was verified by:
-
-
-
-\- Confirming all OUs were successfully created
-
-\- Verifying the hierarchy within Active Directory Users and Computers
-
-\- Confirming administrative and departmental separation
-
-\- Reviewing the structure for future scalability
-
-
-
-\---
-
-
-
-\# Best Practices Applied
-
-
-
-\- Logical OU hierarchy
-
-\- Administrative account separation
-
-\- Department-based organization
-
-\- Dedicated computer Organizational Units
-
-\- Support for future Group Policy deployment
-
-\- Scalable enterprise design
-
-
-
-\---
-
-
-
-\# Skills Demonstrated
-
-
-
-\- Active Directory Administration
-
-\- Organizational Unit Design
-
-\- Enterprise Planning
-
-\- Identity Management
-
-\- Infrastructure Organization
-
-
-
-\---
-
-
-
-\# Screenshots
-
-
-
-Include:
-
-
-
-\- Root OU hierarchy
-
-\- Admin OU
-
-\- Department OUs
-
-\- Workstations OU
-
-\- Complete Organizational Unit structure
-
+The Organizational Unit structure establishes a logical and scalable framework for managing Active Directory objects. By separating departments, users, workstations, and servers into dedicated containers, the environment becomes easier to administer, supports targeted Group Policy deployment, and aligns with common enterprise Active Directory design practices.
